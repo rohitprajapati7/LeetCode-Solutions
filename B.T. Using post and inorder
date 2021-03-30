@@ -1,0 +1,56 @@
+class Node{
+	int val;
+	Node left;
+	Node right;
+
+	Node(int val)
+	{
+		this.val = val;
+		this.left = null;
+		this.right = null;
+	}
+}
+
+class BinaryTreeQue
+{
+	static int idx = 4;
+	Node constructTree(int postorder[], int inorder[], int s, int e)
+	{
+		if(s > e) return null;
+		int curr = postorder[idx];
+		idx--;
+		Node node = new Node(curr);
+
+		if(s == e) return node;
+
+		int pos = search(inorder, s, e, curr);
+		node.right = constructTree(postorder, inorder, pos+1, e);
+		node.left = constructTree(postorder, inorder, s, pos-1);
+
+		return node;
+	}
+
+	int search(int inorder[], int s, int e, int val)
+	{
+		for(int i = s; i <= e; i++){
+			if(inorder[i] == val)
+				return i;
+		}
+		return -1;
+	}
+
+	void inorderPrint(Node root)
+	{
+		if(root == null) return;
+		inorderPrint(root.left);
+		System.out.print(root.val +" ");
+		inorderPrint(root.right);
+	}
+	public static void main(String[] args) {
+		BinaryTreeQue obj = new BinaryTreeQue();
+		int postorder [] = {4, 2, 5, 3, 1};
+		int inorder [] = {4, 2, 1, 5, 3};
+		Node root = obj.constructTree(postorder, inorder, 0, 4);
+		obj.inorderPrint(root);
+	}
+}
